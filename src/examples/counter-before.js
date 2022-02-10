@@ -4,6 +4,7 @@ import * as React from 'react'
 
 // src/context/counter.js
 const CounterContext = React.createContext()
+CounterContext.displayName = 'CounerContext'
 
 function CounterProvider({step = 1, initialCount = 0, ...props}) {
   const [state, dispatch] = React.useReducer(
