@@ -21,7 +21,7 @@ function Toggle({children}) {
   //     : React.cloneElement(child, {on, toggle})
   // })
   return (
-    <ToggleContext.Provider value={[on, toggle]}>
+    <ToggleContext.Provider value={{on, toggle}}>
       {children}
     </ToggleContext.Provider>
   )
@@ -40,19 +40,19 @@ function useToggleContxt() {
 }
 
 function ToggleOn({children}) {
-  const [on] = useToggleContxt()
+  const {on} = useToggleContxt()
   return on ? children : null
 }
 
 // 🐨 do the same thing to this that you did to the ToggleOn component
 function ToggleOff({children}) {
-  const [on] = useToggleContxt()
+  const {on} = useToggleContxt()
   return on ? null : children
 }
 
 // 🐨 get `on` and `toggle` from the ToggleContext with `useContext`
-function ToggleButton({...props}) {
-  const [on, toggle] = useToggleContxt()
+function ToggleButton({props}) {
+  const {on, toggle} = useToggleContxt()
   return <Switch on={on} onClick={toggle} {...props} />
 }
 
