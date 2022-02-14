@@ -29,6 +29,25 @@ function toggleReducer(state, {type, initialState}) {
   }
 }
 
+const useControllesSwitchWarning = (
+  controlPropValue,
+  controlPropName,
+  componentName,
+) => {
+  const isControlled = controlPropValue != null
+  const {current: wasControlled} = React.useRef(isControlled)
+  React.useEffect(() => {
+    warning(
+      !(wasControlled && !isControlled),
+      `\`${componentName}\` is changing from controlled to be uncontrolled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled \`${componentName}\` for the lifetime of the component. Check the \`${controlPropName}\` prop.`,
+    )
+    warning(
+      !(!wasControlled && isControlled),
+      `\`${componentName}\` is changing from uncontrolled to be controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled \`${componentName}\` for the lifetime of the component. Check the \`${controlPropName}\` prop.`,
+    )
+  }, [wasControlled, isControlled, componentName, controlPropName])
+}
+
 function useToggle({
   initialOn = false,
   reducer = toggleReducer,
@@ -48,6 +67,8 @@ function useToggle({
   // 🐨 Replace the next line with assigning `on` to `controlledOn` if
   // `onIsControlled`, otherwise, it should be `state.on`.
   const on = onIsControlled ? controlledOn : state.on
+  useControllesSwitchWarning(onIsControlled, 'on', 'useToggle')
+
   const hasOnChange = Boolean(onChange)
   React.useEffect(() => {
     warning(
